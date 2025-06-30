@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { Button } from '../../components/ui/button';
 import { useRouter } from 'next/navigation';
+import * as XLSX from 'xlsx';
 
 interface Employee {
   id: string;
@@ -50,6 +51,19 @@ export default function DashboardPage() {
   const totalAmount = employees.reduce((sum, emp) => sum + emp.salary, 0);
   const pendingCount = employees.filter(emp => emp.status === 'pending').length;
   const paidCount = employees.filter(emp => emp.status === 'paid').length;
+
+  // Fonction pour exporter un exemple Excel
+  const handleExportExample = () => {
+    const exampleData = [
+      { 'Nom': 'Jean Dupont', 'Email': 'jean.dupont@entreprise.com', 'Salaire': 2500, 'Moyen de paiement': 'Virement bancaire' },
+      { 'Nom': 'Marie Martin', 'Email': 'marie.martin@entreprise.com', 'Salaire': 2800, 'Moyen de paiement': 'Virement bancaire' },
+      { 'Nom': 'Pierre Durand', 'Email': 'pierre.durand@entreprise.com', 'Salaire': 3200, 'Moyen de paiement': 'Virement bancaire' }
+    ];
+    const ws = XLSX.utils.json_to_sheet(exampleData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Exemple');
+    XLSX.writeFile(wb, 'exemple_import_sky-pay.xlsx');
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -135,13 +149,18 @@ export default function DashboardPage() {
 
         {/* Import Section */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow mb-8 w-full">
-          <div className="p-6 border-b border-gray-200 dark:border-gray-700">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-              Importer la liste des salaires
-            </h2>
-            <p className="text-gray-600 dark:text-gray-400">
-              Téléchargez votre fichier Excel avec les informations des employés et leurs salaires
-            </p>
+          <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                Importer la liste des salaires
+              </h2>
+              <p className="text-gray-600 dark:text-gray-400">
+                Téléchargez votre fichier Excel avec les informations des employés et leurs salaires
+              </p>
+            </div>
+            <Button variant="secondary" onClick={handleExportExample}>
+              Exporter un exemple
+            </Button>
           </div>
           <div className="p-6">
             <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-8 text-center">
@@ -234,27 +253,59 @@ export default function DashboardPage() {
                   </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                  {employees.map((employee) => (
+                  {employees.map((employee, idx) => (
                     <tr key={employee.id}>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm font-medium text-gray-900 dark:text-white">
-                          {employee.name}
-                        </div>
+                        <input
+                          type="text"
+                          className="w-full bg-transparent border-b border-gray-300 dark:border-gray-600 focus:outline-none focus:border-blue-500 text-sm font-medium text-gray-900 dark:text-white"
+                          value={employee.name}
+                          onChange={e => {
+                            const newEmployees = [...employees];
+                            newEmployees[idx].name = e.target.value;
+                            setEmployees(newEmployees);
+                          }}
+                        />
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-500 dark:text-gray-400">
-                          {employee.email}
-                        </div>
+                        <input
+                          type="email"
+                          className="w-full bg-transparent border-b border-gray-300 dark:border-gray-600 focus:outline-none focus:border-blue-500 text-sm text-gray-500 dark:text-gray-400"
+                          value={employee.email}
+                          onChange={e => {
+                            const newEmployees = [...employees];
+                            newEmployees[idx].email = e.target.value;
+                            setEmployees(newEmployees);
+                          }}
+                        />
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm font-medium text-gray-900 dark:text-white">
-                          {employee.salary.toLocaleString('fr-FR')} €
-                        </div>
+                        <input
+                          type="number"
+                          className="w-full bg-transparent border-b border-gray-300 dark:border-gray-600 focus:outline-none focus:border-blue-500 text-sm font-medium text-gray-900 dark:text-white"
+                          value={employee.salary}
+                          onChange={e => {
+                            const newEmployees = [...employees];
+                            newEmployees[idx].salary = Number(e.target.value);
+                            setEmployees(newEmployees);
+                          }}
+                        />
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-500 dark:text-gray-400">
-                          {employee.paymentMethod}
-                        </div>
+                        <select
+                          className="w-full bg-transparent border-b border-gray-300 dark:border-gray-600 focus:outline-none focus:border-blue-500 text-sm text-gray-500 dark:text-gray-400"
+                          value={employee.paymentMethod}
+                          onChange={e => {
+                            const newEmployees = [...employees];
+                            newEmployees[idx].paymentMethod = e.target.value;
+                            setEmployees(newEmployees);
+                          }}
+                        >
+                          <option value="Virement bancaire">Virement bancaire</option>
+                          <option value="Carte bancaire">Carte bancaire</option>
+                          <option value="PayPal">PayPal</option>
+                          <option value="Crypto">Crypto</option>
+                        </select>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
