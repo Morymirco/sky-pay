@@ -1,0 +1,272 @@
+# Sky-Pay - Règles de Développement
+
+## 🎯 Contexte du Projet
+Sky-Pay est une application de paiement moderne et sécurisée développée avec Next.js 15, React 19, TypeScript et Tailwind CSS 4. L'application doit respecter les plus hauts standards de sécurité et d'expérience utilisateur.
+
+## 🏗️ Architecture et Structure
+
+### Structure des Dossiers
+```
+app/
+├── (auth)/              # Routes d'authentification
+├── (dashboard)/         # Routes du tableau de bord
+├── (payment)/           # Routes de paiement
+├── api/                 # API routes
+├── components/          # Composants réutilisables
+│   ├── ui/             # Composants UI de base
+│   ├── forms/          # Composants de formulaires
+│   └── layout/         # Composants de mise en page
+├── lib/                # Utilitaires et configurations
+├── hooks/              # Hooks personnalisés
+├── types/              # Types TypeScript
+└── utils/              # Fonctions utilitaires
+```
+
+### Conventions de Nommage
+- **Composants** : PascalCase (ex: `PaymentForm.tsx`)
+- **Fonctions** : camelCase (ex: `processPayment`)
+- **Constantes** : UPPER_SNAKE_CASE (ex: `API_ENDPOINTS`)
+- **Types/Interfaces** : PascalCase avec préfixe (ex: `IPaymentData`)
+- **Fichiers** : kebab-case (ex: `payment-form.tsx`)
+
+## 🔒 Sécurité (PRIORITÉ ABSOLUE)
+
+### Règles de Sécurité
+1. **NE JAMAIS** stocker de données sensibles (numéros de carte, CVV) en local
+2. **Toujours** utiliser HTTPS en production
+3. **Valider** toutes les entrées utilisateur côté serveur
+4. **Implémenter** une authentification robuste (JWT + refresh tokens)
+5. **Utiliser** des variables d'environnement pour les clés API
+6. **Chiffrer** les données sensibles en transit et au repos
+7. **Implémenter** une protection CSRF
+8. **Limiter** les tentatives de connexion
+9. **Logger** toutes les actions sensibles
+10. **Utiliser** des tokens d'accès temporaires
+
+### Variables d'Environnement Requises
+```env
+# Base
+NEXT_PUBLIC_APP_URL=
+NODE_ENV=
+
+# Base de données
+DATABASE_URL=
+
+# Authentification
+JWT_SECRET=
+JWT_REFRESH_SECRET=
+NEXTAUTH_SECRET=
+NEXTAUTH_URL=
+
+# Paiement
+STRIPE_SECRET_KEY=
+STRIPE_PUBLISHABLE_KEY=
+STRIPE_WEBHOOK_SECRET=
+
+# Sécurité
+ENCRYPTION_KEY=
+```
+
+## 💳 Fonctionnalités de Paiement
+
+### Fonctionnalités Principales
+- **Inscription/Connexion** sécurisée
+- **Gestion de profil** utilisateur
+- **Ajout de moyens de paiement** (cartes, comptes bancaires)
+- **Effectuer des paiements** sécurisés
+- **Historique des transactions**
+- **Notifications** en temps réel
+- **Gestion des erreurs** robuste
+- **Support multi-devises**
+
+### Intégrations de Paiement
+- **Stripe** (principal)
+- **PayPal** (optionnel)
+- **Crypto** (optionnel)
+
+## 🎨 Design et UX
+
+### Design System
+- **Couleurs** : Palette professionnelle et accessible
+- **Typographie** : Geist (déjà configuré)
+- **Espacement** : Système cohérent (4px, 8px, 16px, 24px, 32px)
+- **Breakpoints** : Mobile-first (sm: 640px, md: 768px, lg: 1024px, xl: 1280px)
+
+### Composants UI
+- **Boutons** : Primary, Secondary, Danger, Ghost
+- **Formulaires** : Validation en temps réel
+- **Modales** : Confirmations et alertes
+- **Loading states** : Squeletons et spinners
+- **Notifications** : Toast et alertes
+
+### Accessibilité
+- **WCAG 2.1 AA** compliance
+- **Navigation clavier** complète
+- **Contraste** suffisant
+- **Labels** appropriés
+- **Alt text** pour les images
+
+## 📱 Responsive Design
+- **Mobile-first** approach
+- **Touch-friendly** interfaces
+- **Optimisation** des performances
+- **PWA** ready
+
+## 🔧 Code Quality
+
+### TypeScript
+- **Strict mode** activé
+- **Types** explicites pour toutes les fonctions
+- **Interfaces** pour les props de composants
+- **Enums** pour les constantes
+- **Utility types** quand approprié
+
+### React/Next.js
+- **Server Components** par défaut
+- **Client Components** seulement si nécessaire
+- **Hooks** personnalisés pour la logique réutilisable
+- **Error boundaries** pour la gestion d'erreurs
+- **Suspense** pour le loading
+
+### Performance
+- **Lazy loading** des composants
+- **Image optimization** avec Next.js
+- **Code splitting** automatique
+- **Bundle analysis** régulière
+- **Core Web Vitals** optimisés
+
+## 🧪 Tests
+
+### Stratégie de Tests
+- **Unit tests** : Jest + React Testing Library
+- **Integration tests** : API routes
+- **E2E tests** : Playwright
+- **Coverage** : Minimum 80%
+
+### Tests Requis
+- **Authentification** (login, register, logout)
+- **Paiements** (création, validation, erreurs)
+- **Formulaires** (validation, soumission)
+- **Navigation** (routing, breadcrumbs)
+
+## 📊 Monitoring et Analytics
+
+### Monitoring
+- **Error tracking** : Sentry
+- **Performance** : Vercel Analytics
+- **Uptime** : Health checks
+- **Logs** : Structured logging
+
+### Analytics
+- **User behavior** : Google Analytics 4
+- **Conversion** : Funnel tracking
+- **A/B testing** : Optimizely
+
+## 🚀 Déploiement
+
+### Environnements
+- **Development** : Local avec hot reload
+- **Staging** : Tests et validation
+- **Production** : Vercel/Netlify
+
+### CI/CD
+- **GitHub Actions** pour l'automatisation
+- **Tests** automatiques sur chaque PR
+- **Deployment** automatique sur merge
+- **Rollback** en cas de problème
+
+## 📝 Documentation
+
+### Documentation Requise
+- **README.md** : Setup et développement
+- **API.md** : Documentation des endpoints
+- **COMPONENTS.md** : Guide des composants
+- **SECURITY.md** : Mesures de sécurité
+- **DEPLOYMENT.md** : Guide de déploiement
+
+## 🐛 Gestion des Erreurs
+
+### Types d'Erreurs
+- **Validation** : Erreurs de formulaire
+- **Authentification** : Erreurs de connexion
+- **Paiement** : Erreurs de transaction
+- **Système** : Erreurs serveur
+- **Réseau** : Erreurs de connexion
+
+### Gestion des Erreurs
+- **Messages** utilisateur-friendly
+- **Logging** détaillé côté serveur
+- **Retry** automatique pour les erreurs temporaires
+- **Fallback** UI pour les erreurs critiques
+
+## 🔄 Workflow de Développement
+
+### Branches
+- **main** : Production
+- **develop** : Développement
+- **feature/** : Nouvelles fonctionnalités
+- **hotfix/** : Corrections urgentes
+
+### Commits
+- **Conventional Commits** : feat:, fix:, docs:, etc.
+- **Messages** descriptifs en français
+- **Scope** quand approprié
+
+### Code Review
+- **Pull requests** obligatoires
+- **Tests** passants
+- **Linting** sans erreurs
+- **TypeScript** sans erreurs
+
+## 🎯 Objectifs de Performance
+
+### Métriques Cibles
+- **LCP** : < 2.5s
+- **FID** : < 100ms
+- **CLS** : < 0.1
+- **TTFB** : < 600ms
+- **Bundle size** : < 500KB (gzipped)
+
+## 🔧 Outils Recommandés
+
+### Développement
+- **VS Code** avec extensions TypeScript/React
+- **Postman** pour tester les APIs
+- **Chrome DevTools** pour le debugging
+- **React DevTools** pour les composants
+
+### Qualité
+- **ESLint** : Linting JavaScript/TypeScript
+- **Prettier** : Formatage du code
+- **Husky** : Git hooks
+- **Lint-staged** : Linting des fichiers modifiés
+
+## ⚠️ Points d'Attention
+
+### Sécurité
+- **Audit** régulier des dépendances
+- **Scan** de vulnérabilités
+- **Review** de sécurité du code
+- **Tests** de pénétration
+
+### Conformité
+- **RGPD** : Protection des données
+- **PCI DSS** : Standards de sécurité des paiements
+- **PSD2** : Directive européenne sur les paiements
+
+## 🎉 Bonnes Pratiques Générales
+
+1. **Code** propre et maintenable
+2. **Documentation** à jour
+3. **Tests** avant chaque déploiement
+4. **Sécurité** en premier
+5. **Performance** optimisée
+6. **Accessibilité** pour tous
+7. **Mobile-first** design
+8. **Monitoring** continu
+9. **Backup** régulier
+10. **Support** utilisateur
+
+---
+
+**Note** : Ces règles doivent être respectées à chaque étape du développement. La sécurité et la qualité du code sont prioritaires sur la vitesse de développement. 
